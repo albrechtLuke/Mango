@@ -6,56 +6,116 @@
 //
 
 import SwiftUI
-import SwiftData
+import VisionKit
+
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @EnvironmentObject var vm: AppViewModel
+    
+    
+    private let textContentTypes: [(title: String, textContentType: DataScannerViewController.TextContentType?)] = [
+        ("ALL", .none),
+        ("URL", .URL),
+        ("Phone", .telephoneNumber),
+        ("Email", .emailAddress),
+        ("Address", .fullStreetAddress)]
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        
+        switch vm.dataScannerAccessStatus {
+        case .notDetermined:
+            Text("Requesting camera access")
+        case .cameraAccessNotGranted:
+            Text("Please provide access to the camera in settings")
+        case .cameraNotAvailable:
+            Text("Your device does not have support for scanning barcode with this app!")
+        case .scannerAvailable:
+            mainView
+        case .scannerNotAvailable:
+            Text("Your device does not have a camera")
+        }
+        
+    }
+    
+    private var headerView: some View {
+        VStack {
+            HStack {
+                Picker("Scan Type", selection: $vm.scanType) {
+                    Text("Barcode").tag(ScanType.barcode)
+                    Text("Text").tag(ScanType.text)
+                }
+                .pickerStyle(.segmented)
+                
+                Toggle("Scan multple", isOn: $vm.recognizesMultipleItems)
+            }
+            .padding(.top)
+            
+            if vm.scanType == .text {
+                Picker("Text content type", selection: $vm.textContentType) {
+                    ForEach(textContentTypes, id: \.self.textContentType) { option in
+                        Text(option.title).tag(option.textContentType)
                     }
                 }
-                .onDelete(perform: deleteItems)
+                .pickerStyle(.segmented)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+            
+            Text(vm.headerText).padding(.top)
+        }
+        .padding(.horizontal )
+    }
+    
+    private var mainView: some View {
+        
+            DataScannerView(
+                recognizedItems: $vm.recognizedItems,
+                recognizedDataType: vm.recognizedDataType,
+                recognizeMultipleItems: vm.recognizesMultipleItems)
+            .background { Color.gray.opacity(0.3) }
+            .ignoresSafeArea()
+            .id(vm.dataScannerViewId)
+            .sheet(isPresented: .constant(true), content: {
+                bottomContainerView
+                    .background(.ultraThinMaterial)
+                    .presentationDetents([.medium, .fraction(0.25)])
+                    .presentationDragIndicator(.visible)
+                    .interactiveDismissDisabled()
+                    .onAppear {
+                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                              let controller = windowScene.windows.first?.rootViewController?.presentedViewController else {
+                            return
+                        }
+                        controller.view.backgroundColor = .clear
+                    }
+            })
+
+//        .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
+//        .onChange(of: vm.textContentType)  { _ in vm.recognizedItems = [] }
+//        .onChange(of: vm.recognizesMultipleItems)  { _ in vm.recognizedItems = [] }
+    }
+    
+    
+    private var bottomContainerView: some View {
+        VStack {
+            headerView
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    ForEach(vm.recognizedItems) { item in
+                        switch item {
+                        case .barcode(let barcode):
+                            Text(barcode.payloadStringValue ?? "Unknown Barcode")
+                            
+                        case .text(let text):
+                            Text(text.transcript)
+                            
+                        @unknown default:
+                            Text("Unknown")
+                            
+                        }
                     }
                 }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+                .padding()
             }
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        
 }

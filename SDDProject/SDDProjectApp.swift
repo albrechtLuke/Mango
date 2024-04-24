@@ -22,10 +22,21 @@ struct SDDProjectApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    
+    
+    
+    //initialise AppViewModel
+    @StateObject private var vm = AppViewModel()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(vm)
+            //request scanner access
+                .task {
+                    await vm.requestDataScannerAccessStatus()
+                }
         }
         .modelContainer(sharedModelContainer)
     }
