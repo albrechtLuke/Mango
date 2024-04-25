@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AC6515652BD77E65002C6C53 /* SDDProjectApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */; };
-		AC6515672BD77E65002C6C53 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515662BD77E65002C6C53 /* ContentView.swift */; };
+		AC6515672BD77E65002C6C53 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515662BD77E65002C6C53 /* CameraView.swift */; };
 		AC6515692BD77E65002C6C53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515682BD77E65002C6C53 /* Item.swift */; };
 		AC65156B2BD77E66002C6C53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC65156A2BD77E66002C6C53 /* Assets.xcassets */; };
 		AC65156E2BD77E66002C6C53 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC65156D2BD77E66002C6C53 /* Preview Assets.xcassets */; };
@@ -19,7 +19,7 @@
 /* Begin PBXFileReference section */
 		AC6515612BD77E65002C6C53 /* SDDProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDDProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDDProjectApp.swift; sourceTree = "<group>"; };
-		AC6515662BD77E65002C6C53 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AC6515662BD77E65002C6C53 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		AC6515682BD77E65002C6C53 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		AC65156A2BD77E66002C6C53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC65156D2BD77E66002C6C53 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 			children = (
 				AC6515742BD79A12002C6C53 /* Info.plist */,
 				AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */,
-				AC6515662BD77E65002C6C53 /* ContentView.swift */,
+				AC6515662BD77E65002C6C53 /* CameraView.swift */,
 				AC65157B2BD93013002C6C53 /* DataScannerView.swift */,
 				AC6515792BD92B7B002C6C53 /* AppViewModel.swift */,
 				AC6515682BD77E65002C6C53 /* Item.swift */,
@@ -150,7 +150,7 @@
 			files = (
 				AC65157A2BD92B7B002C6C53 /* AppViewModel.swift in Sources */,
 				AC65157C2BD93013002C6C53 /* DataScannerView.swift in Sources */,
-				AC6515672BD77E65002C6C53 /* ContentView.swift in Sources */,
+				AC6515672BD77E65002C6C53 /* CameraView.swift in Sources */,
 				AC6515692BD77E65002C6C53 /* Item.swift in Sources */,
 				AC6515652BD77E65002C6C53 /* SDDProjectApp.swift in Sources */,
 			);

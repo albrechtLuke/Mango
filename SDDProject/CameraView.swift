@@ -9,7 +9,7 @@ import SwiftUI
 import VisionKit
 
 
-struct ContentView: View {
+struct CameraView: View {
     @EnvironmentObject var vm: AppViewModel
     
     
@@ -39,6 +39,7 @@ struct ContentView: View {
     
     private var headerView: some View {
         VStack {
+            //test comment for staging changes to remote repo
             HStack {
                 Picker("Scan Type", selection: $vm.scanType) {
                     Text("Barcode").tag(ScanType.barcode)
@@ -87,7 +88,7 @@ struct ContentView: View {
                         controller.view.backgroundColor = .clear
                     }
             })
-
+           
 //        .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
 //        .onChange(of: vm.textContentType)  { _ in vm.recognizedItems = [] }
 //        .onChange(of: vm.recognizesMultipleItems)  { _ in vm.recognizedItems = [] }

@@ -10,19 +10,7 @@ import SwiftData
 
 @main
 struct SDDProjectApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-    
+   
     
     
     
@@ -31,13 +19,13 @@ struct SDDProjectApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CameraView()
                 .environmentObject(vm)
             //request scanner access
                 .task {
                     await vm.requestDataScannerAccessStatus()
                 }
         }
-        .modelContainer(sharedModelContainer)
+        
     }
 }
