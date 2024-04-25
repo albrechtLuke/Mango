@@ -39,7 +39,7 @@ struct CameraView: View {
     
     private var headerView: some View {
         VStack {
-            //test comment for staging changes to remote repo try #2
+            //showing commit changes
             HStack {
                 Picker("Scan Type", selection: $vm.scanType) {
                     Text("Barcode").tag(ScanType.barcode)
