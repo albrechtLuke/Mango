@@ -12,27 +12,27 @@ import VisionKit
 struct CameraView: View {
     @EnvironmentObject var vm: AppViewModel
     
-    
-    private let textContentTypes: [(title: String, textContentType: DataScannerViewController.TextContentType?)] = [
-        ("ALL", .none),
-        ("URL", .URL),
-        ("Phone", .telephoneNumber),
-        ("Email", .emailAddress),
-        ("Address", .fullStreetAddress)]
+//    
+//    private let textContentTypes: [(title: String, textContentType: DataScannerViewController.TextContentType?)] = [
+//        ("ALL", .none),
+//        ("URL", .URL),
+//        ("Phone", .telephoneNumber),
+//        ("Email", .emailAddress),
+//        ("Address", .fullStreetAddress)]
     
     var body: some View {
         
         switch vm.dataScannerAccessStatus {
         case .notDetermined:
-            Text("Requesting camera access")
+            PermissionView(permissionImage: "video", permissionText: "Requesting Camera Access")
         case .cameraAccessNotGranted:
-            Text("Please provide access to the camera in settings")
+            PermissionView(permissionImage: "video.slash", permissionText: "Please provide access to the camera in settings")
         case .cameraNotAvailable:
-            Text("Your device does not have support for scanning barcode with this app!")
+            PermissionView(permissionImage: "video.slash", permissionText: "Your device does not have support for scanning barcode with this app!")
         case .scannerAvailable:
             mainView
         case .scannerNotAvailable:
-            Text("Your device does not have a camera")
+            PermissionView(permissionImage: "questionmark.video", permissionText: "Your device does not have a camera")
         }
         
     }
@@ -40,58 +40,88 @@ struct CameraView: View {
     private var headerView: some View {
         VStack {
             //showing commit changes
-            HStack {
-                Picker("Scan Type", selection: $vm.scanType) {
-                    Text("Barcode").tag(ScanType.barcode)
-                    Text("Text").tag(ScanType.text)
-                }
-                .pickerStyle(.segmented)
+//            HStack {
+//                Picker("Scan Type", selection: $vm.scanType) {
+//                    Text("Barcode").tag(ScanType.barcode)
+//                    Text("Text").tag(ScanType.text)
+//                }
+//                .pickerStyle(.segmented)
                 
-                Toggle("Scan multple", isOn: $vm.recognizesMultipleItems)
-            }
-            .padding(.top)
+//                Toggle("Scan multple", isOn: $vm.recognizesMultipleItems)
+//            }
+//            .padding(.top)
             
-            if vm.scanType == .text {
-                Picker("Text content type", selection: $vm.textContentType) {
-                    ForEach(textContentTypes, id: \.self.textContentType) { option in
-                        Text(option.title).tag(option.textContentType)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
+//            if vm.scanType == .text {
+//                Picker("Text content type", selection: $vm.textContentType) {
+//                    ForEach(textContentTypes, id: \.self.textContentType) { option in
+//                        Text(option.title).tag(option.textContentType)
+//                    }
+//                }
+//                .pickerStyle(.segmented)
+//            }
             
-            Text(vm.headerText).padding(.top)
+            Text(vm.headerText)
+                .padding(.top)
+                .font(.title2)
+                .fontWeight(.bold)
         }
         .padding(.horizontal )
     }
     
     private var mainView: some View {
-        
-            DataScannerView(
-                recognizedItems: $vm.recognizedItems,
-                recognizedDataType: vm.recognizedDataType,
-                recognizeMultipleItems: vm.recognizesMultipleItems)
-            .background { Color.gray.opacity(0.3) }
-            .ignoresSafeArea()
-            .id(vm.dataScannerViewId)
-            .sheet(isPresented: .constant(true), content: {
-                bottomContainerView
-                    .background(.ultraThinMaterial)
-                    .presentationDetents([.medium, .fraction(0.25)])
-                    .presentationDragIndicator(.visible)
-                    .interactiveDismissDisabled()
-                    .onAppear {
-                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                              let controller = windowScene.windows.first?.rootViewController?.presentedViewController else {
-                            return
+        TabView {
+            Group {
+                
+                
+                ZStack {
+                    DataScannerView(
+                        recognizedItems: $vm.recognizedItems,
+                        //                recognizedDataType: vm.recognizedDataType,
+                        recognizeMultipleItems: vm.recognizesMultipleItems)
+                    .background { Color.gray.opacity(0.3) }
+                    .ignoresSafeArea()
+                    .id(vm.dataScannerViewId)
+                    
+                    VStack {
+                        Spacer()
+                        
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 25, style: .continuous)
+                                .fill(.ultraThinMaterial)
+                            
+                            //                    .padding(.horizontal)
+                            
+                            bottomContainerView
                         }
-                        controller.view.backgroundColor = .clear
+                        .ignoresSafeArea(.all, edges: .bottom)
+                        .frame(height: 200)
                     }
-            })
-           
-//        .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
-//        .onChange(of: vm.textContentType)  { _ in vm.recognizedItems = [] }
-//        .onChange(of: vm.recognizesMultipleItems)  { _ in vm.recognizedItems = [] }
+                    
+                }
+                
+                
+                
+                //            .sheet(isPresented: .constant(true), content: {
+                //                bottomContainerView
+                //                    .background(.ultraThinMaterial)
+                //                    .presentationDetents([.medium, .fraction(0.25)])
+                //                    .presentationDragIndicator(.visible)
+                //                    .interactiveDismissDisabled()
+                //                //makes sheet translucent
+                //                    .onAppear {
+                //                        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                //                              let controller = windowScene.windows.first?.rootViewController?.presentedViewController else {
+                //                            return
+                //                        }
+                //                        controller.view.backgroundColor = .clear
+                //                    }
+                //            })
+                
+            }
+//            .toolbarBackground(.blue, for: .tabBar)
+//            .toolbarBackground(.visible, for: .tabBar)
+//            .toolbarColorScheme(.dark, for: .tabBar)
+        }
     }
     
     
@@ -104,6 +134,7 @@ struct CameraView: View {
                         switch item {
                         case .barcode(let barcode):
                             Text(barcode.payloadStringValue ?? "Unknown Barcode")
+                            
                             
                         case .text(let text):
                             Text(text.transcript)
@@ -119,4 +150,28 @@ struct CameraView: View {
         }
     }
         
+}
+
+
+struct PermissionView: View {
+    
+    let permissionImage: String
+    let permissionText: String
+    
+    var body: some View {
+        VStack {
+            
+            Image(systemName: permissionImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200, height: 200)
+            Text(permissionText)
+                .font(.title)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+                .padding()
+            
+        
+        }
+    }
 }

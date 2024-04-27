@@ -12,17 +12,20 @@ import VisionKit
 struct DataScannerView: UIViewControllerRepresentable {
     
     @Binding var recognizedItems: [RecognizedItem]
-    let recognizedDataType: DataScannerViewController.RecognizedDataType
+//    let recognizedDataType: DataScannerViewController.RecognizedDataType
     let recognizeMultipleItems: Bool
     
     
     func makeUIViewController(context: Context) -> DataScannerViewController {
         let vc = DataScannerViewController(
-            recognizedDataTypes: [recognizedDataType],
-            qualityLevel: .balanced,
-            recognizesMultipleItems: false,
+            recognizedDataTypes: [.barcode()],
+            qualityLevel: .fast,
+            isHighFrameRateTrackingEnabled: true,
+            isPinchToZoomEnabled: true,
             isGuidanceEnabled: true,
             isHighlightingEnabled: true
+            
+            
         )
         return vc
     }

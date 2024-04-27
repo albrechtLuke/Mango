@@ -14,6 +14,7 @@
 		AC65156E2BD77E66002C6C53 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC65156D2BD77E66002C6C53 /* Preview Assets.xcassets */; };
 		AC65157A2BD92B7B002C6C53 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515792BD92B7B002C6C53 /* AppViewModel.swift */; };
 		AC65157C2BD93013002C6C53 /* DataScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC65157B2BD93013002C6C53 /* DataScannerView.swift */; };
+		AC6515982BDCFB6F002C6C53 /* SwiftUITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515972BDCFB6F002C6C53 /* SwiftUITestView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		AC6515742BD79A12002C6C53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AC6515792BD92B7B002C6C53 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		AC65157B2BD93013002C6C53 /* DataScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScannerView.swift; sourceTree = "<group>"; };
+		AC6515972BDCFB6F002C6C53 /* SwiftUITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUITestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				AC6515742BD79A12002C6C53 /* Info.plist */,
 				AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */,
 				AC6515662BD77E65002C6C53 /* CameraView.swift */,
+				AC6515972BDCFB6F002C6C53 /* SwiftUITestView.swift */,
 				AC65157B2BD93013002C6C53 /* DataScannerView.swift */,
 				AC6515792BD92B7B002C6C53 /* AppViewModel.swift */,
 				AC6515682BD77E65002C6C53 /* Item.swift */,
@@ -152,6 +155,7 @@
 				AC65157C2BD93013002C6C53 /* DataScannerView.swift in Sources */,
 				AC6515672BD77E65002C6C53 /* CameraView.swift in Sources */,
 				AC6515692BD77E65002C6C53 /* Item.swift in Sources */,
+				AC6515982BDCFB6F002C6C53 /* SwiftUITestView.swift in Sources */,
 				AC6515652BD77E65002C6C53 /* SDDProjectApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

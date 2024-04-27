@@ -54,7 +54,7 @@ final class AppViewModel: ObservableObject {
         return hasher.finalize()
     }
     
-    
+    //All cases for camera permissions
     private var isScannerAvailable: Bool {
         DataScannerViewController.isAvailable && DataScannerViewController.isSupported
     }
