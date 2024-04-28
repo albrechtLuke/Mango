@@ -12,6 +12,7 @@ import VisionKit
 struct DataScannerView: UIViewControllerRepresentable {
     
     @Binding var recognizedItems: [RecognizedItem]
+
 //    let recognizedDataType: DataScannerViewController.RecognizedDataType
     let recognizeMultipleItems: Bool
     
@@ -57,19 +58,42 @@ struct DataScannerView: UIViewControllerRepresentable {
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, didAdd addedItems: [RecognizedItem], allItems: [RecognizedItem]) {
+            @State var isPresented = false
+            
             //provides vibration on success to user
             UINotificationFeedbackGenerator().notificationOccurred(.success)
+            
+            
             recognizedItems.append(contentsOf: addedItems)
             
-            print("didAddItems\(addedItems)")
+//            print("RecognisedItemsList \(recognizedItems)")
+//            self.recognizedItems = recognizedItems.filter { item in
+//                
+//                if let index = recognizedItems.firstIndex(where: { $0.id == item.id }) {
+//                    // If the item is found in recognizedItems
+//                    return false // Exclude item from recognizedItems
+//                } else {
+//                    // If the item is not found in recognizedItems
+//                    
+//                    return true // Include item in recognizedItems
+//                }
+//            }
+            
+            
+            
+//            print("didAddItems\(addedItems)")
         }
         
-        //used in custom headlight function
+        
+        
         func dataScanner(_ dataScanner: DataScannerViewController, didRemove removedItems: [RecognizedItem], allItems: [RecognizedItem]) {
             self.recognizedItems = recognizedItems.filter { item in
                 //only filters items that is not contained in removedItems array, if is contained, remove from RecognizedItem array
                 !removedItems.contains(where: {$0.id == item.id})
             }
+            
+           
+
             print("didRemovedAllItems \(removedItems)")
         }
         

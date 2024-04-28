@@ -32,7 +32,7 @@ final class AppViewModel: ObservableObject {
     @Published var textContentType: DataScannerViewController.TextContentType?
     @Published var recognizesMultipleItems = true
     
-     var recognizedDataType: DataScannerViewController.RecognizedDataType {
+    var recognizedDataType: DataScannerViewController.RecognizedDataType {
         scanType == .barcode ? .barcode() : .text(textContentType: textContentType)
     }
     
@@ -54,7 +54,10 @@ final class AppViewModel: ObservableObject {
         return hasher.finalize()
     }
     
+    
+    
     //All cases for camera permissions
+    
     private var isScannerAvailable: Bool {
         DataScannerViewController.isAvailable && DataScannerViewController.isSupported
     }
