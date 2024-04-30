@@ -17,6 +17,8 @@ struct DataScannerView: UIViewControllerRepresentable {
     let recognizeMultipleItems: Bool
     
     
+    
+    
     func makeUIViewController(context: Context) -> DataScannerViewController {
         let vc = DataScannerViewController(
             recognizedDataTypes: [.barcode()],

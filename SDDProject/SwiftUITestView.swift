@@ -6,15 +6,17 @@
 //
 
 import SwiftUI
+import SwiftfulLoadingIndicators
 
 struct SwiftUITestView: View {
-    var body: some View {
-        TabView {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+    @State private var isLoading = false
+     
+        var body: some View {
+            LoadingIndicator(size: .large)
                 
+            
         }
-        
-    }
+    
 }
 
 #Preview {

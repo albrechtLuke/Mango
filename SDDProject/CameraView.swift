@@ -90,13 +90,15 @@ struct CameraView: View {
                             let tempBarcode = barcode.payloadStringValue ?? "Unknown Barcode"
                             Text("Item Found!")
                                 .onAppear(perform: {
-                                    isShowingItemFoundView = true // Set isShowingItemFoundView to true here
                                     while foundBarcode == nil {
-                                        foundBarcode = tempBarcode
+                                        if isEAN13(tempBarcode) {
+                                            foundBarcode = tempBarcode
+                                            isShowingItemFoundView = true
+                                        }
                                     }
                                     
                                 })
-                                
+                            
                             
                             //                             Capture the barcode only when isShowingItemFoundView is true
                             //                            if isShowingItemFoundView {
@@ -112,7 +114,7 @@ struct CameraView: View {
                 }
                 .padding()
                 .fullScreenCover(isPresented: $isShowingItemFoundView) {
-                    ItemFoundView(isPresented: $isShowingItemFoundView, foundBarcode: $foundBarcode, barcodeID: foundBarcode ?? "")
+                    LoadingView(isPresented: $isShowingItemFoundView, foundBarcode: $foundBarcode, barcodeID: foundBarcode ?? "no response yet :(")
                 }
             }
         }
@@ -138,71 +140,6 @@ struct PermissionView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding()
-        }
-    }
-}
-
-struct ItemFoundView: View {
-    @Binding var isPresented: Bool
-    @Binding var foundBarcode: String?
-    let barcodeID: String
-    
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text(barcodeID)
-                    .font(.title)
-                    .fontWeight(.heavy)
-                
-                NavigationLink(destination: TESTItemSecondView(isPresented: $isPresented, foundBarcode: $foundBarcode, barcodeID: barcodeID)) {
-                    Text("Go to Second View")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    
-                }
-                .navigationBarItems(trailing: Button(action: {
-                    foundBarcode = nil
-                    isPresented = false
-                    
-                }) {
-                    Image(systemName: "x.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                        .padding()
-                })
-                
-            }
-        }
-    }
-}
-
-struct TESTItemSecondView: View {
-    @Binding var isPresented: Bool
-    @Binding var foundBarcode: String?
-    let barcodeID: String
-    
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Second test view")
-                Text(barcodeID)
-                    .font(.title)
-                    .fontWeight(.heavy)
-            }
-            .navigationBarItems(trailing: Button(action: {
-                foundBarcode = nil
-                isPresented = false
-            }) {
-                Image(systemName: "x.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .padding()
-            })
-            
         }
     }
 }

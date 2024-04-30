@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC0764F52BDF51640000C3C7 /* ValidateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0764F42BDF51630000C3C7 /* ValidateData.swift */; };
+		AC0764F82BDF55410000C3C7 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = AC0764F72BDF55410000C3C7 /* SwiftfulLoadingIndicators */; };
+		AC3CCDC52BDF89380024D786 /* ApiResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3CCDC42BDF89380024D786 /* ApiResponseView.swift */; };
+		AC3CCDC72BE092C80024D786 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3CCDC62BE092C80024D786 /* LoadingView.swift */; };
 		AC6515652BD77E65002C6C53 /* SDDProjectApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */; };
 		AC6515672BD77E65002C6C53 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6515662BD77E65002C6C53 /* CameraView.swift */; };
 		AC65156B2BD77E66002C6C53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC65156A2BD77E66002C6C53 /* Assets.xcassets */; };
@@ -17,6 +21,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC0764F42BDF51630000C3C7 /* ValidateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateData.swift; sourceTree = "<group>"; };
+		AC3CCDC42BDF89380024D786 /* ApiResponseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseView.swift; sourceTree = "<group>"; };
+		AC3CCDC62BE092C80024D786 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		AC6515612BD77E65002C6C53 /* SDDProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDDProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDDProjectApp.swift; sourceTree = "<group>"; };
 		AC6515662BD77E65002C6C53 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -33,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC0764F82BDF55410000C3C7 /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,8 +69,11 @@
 				AC6515742BD79A12002C6C53 /* Info.plist */,
 				AC6515642BD77E65002C6C53 /* SDDProjectApp.swift */,
 				AC6515662BD77E65002C6C53 /* CameraView.swift */,
+				AC3CCDC42BDF89380024D786 /* ApiResponseView.swift */,
+				AC3CCDC62BE092C80024D786 /* LoadingView.swift */,
 				AC6515972BDCFB6F002C6C53 /* SwiftUITestView.swift */,
 				AC65157B2BD93013002C6C53 /* DataScannerView.swift */,
+				AC0764F42BDF51630000C3C7 /* ValidateData.swift */,
 				AC6515792BD92B7B002C6C53 /* AppViewModel.swift */,
 				AC65156A2BD77E66002C6C53 /* Assets.xcassets */,
 				AC65156C2BD77E66002C6C53 /* Preview Content */,
@@ -94,6 +105,9 @@
 			dependencies = (
 			);
 			name = SDDProject;
+			packageProductDependencies = (
+				AC0764F72BDF55410000C3C7 /* SwiftfulLoadingIndicators */,
+			);
 			productName = SDDProject;
 			productReference = AC6515612BD77E65002C6C53 /* SDDProject.app */;
 			productType = "com.apple.product-type.application";
@@ -122,6 +136,9 @@
 				Base,
 			);
 			mainGroup = AC6515582BD77E65002C6C53;
+			packageReferences = (
+				AC0764F62BDF55410000C3C7 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
+			);
 			productRefGroup = AC6515622BD77E65002C6C53 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -151,8 +168,11 @@
 				AC65157A2BD92B7B002C6C53 /* AppViewModel.swift in Sources */,
 				AC65157C2BD93013002C6C53 /* DataScannerView.swift in Sources */,
 				AC6515672BD77E65002C6C53 /* CameraView.swift in Sources */,
+				AC3CCDC52BDF89380024D786 /* ApiResponseView.swift in Sources */,
 				AC6515982BDCFB6F002C6C53 /* SwiftUITestView.swift in Sources */,
+				AC3CCDC72BE092C80024D786 /* LoadingView.swift in Sources */,
 				AC6515652BD77E65002C6C53 /* SDDProjectApp.swift in Sources */,
+				AC0764F52BDF51640000C3C7 /* ValidateData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +382,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AC0764F62BDF55410000C3C7 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AC0764F72BDF55410000C3C7 /* SwiftfulLoadingIndicators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC0764F62BDF55410000C3C7 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
+			productName = SwiftfulLoadingIndicators;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AC6515592BD77E65002C6C53 /* Project object */;
 }
