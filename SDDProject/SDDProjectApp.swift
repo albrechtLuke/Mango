@@ -10,10 +10,6 @@ import SwiftData
 
 @main
 struct SDDProjectApp: App {
-   
-    
-    
-    
     //initialise AppViewModel
     @StateObject private var vm = AppViewModel()
     
@@ -23,7 +19,7 @@ struct SDDProjectApp: App {
                 
                 CameraView()
                     .environmentObject(vm)
-                //request scanner access
+                //requesting scanner access
                     .task {
                         await vm.requestDataScannerAccessStatus()
                     }
@@ -32,19 +28,14 @@ struct SDDProjectApp: App {
                         Label("Scan", systemImage: "camera")
                     }
                     .toolbarBackground(.visible, for: .tabBar)
-                    .toolbarBackground(.ultraThinMaterial, for: .tabBar)
-                    
-                        
-                
 
-                    
-                
-                SwiftUITestView()
+                DummyListView()
                     .tag(2)
                     .tabItem {
                         Label("List", systemImage: "list.clipboard")
                     }
             }
         }
+        .modelContainer(for: SavedItems.self)
     }
 }

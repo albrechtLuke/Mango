@@ -29,10 +29,10 @@ struct CameraView: View {
             case .scannerAvailable:
                 mainView
             case .scannerNotAvailable:
-                Text("Your device does not have a camera")
-                    .fullScreenCover(isPresented: .constant(true), content: {
-                        PermissionView(permissionImage: "questionmark.video", permissionText: "Your device does not have a camera")
-                    })
+//                Text("Your device does not have a camera")
+//                    .fullScreenCover(isPresented: .constant(true), content: {
+                    PermissionView(permissionImage: "questionmark.video", permissionText: "Your device does not have a camera")
+//                    })
             }
         }
     }

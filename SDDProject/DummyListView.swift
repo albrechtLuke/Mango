@@ -6,40 +6,33 @@
 //
 
 import SwiftUI
-
+import SwiftData
 
 
 struct DummyListView: View {
     
+    @Environment(\.modelContext) private var context
+    @Query private var items: [SavedItems]
+    
     var body: some View {
-        NavigationStack {
+        NavigationView {
             List {
-                
-                ListRow(imageName: "nate", heading: "Heading", subtitle: "Subtitle")
-                ListRow(imageName: "nate", heading: "Heading", subtitle: "Subtitle")
-                ListRow(imageName: "nate", heading: "Heading", subtitle: "Subtitle")
-                ListRow(imageName: "nate", heading: "Heading", subtitle: "Subtitle")
-                
+                ForEach(items) { item in
+                    ListRow(imageName: item.image, heading: item.name, subtitle: "Subtitle")
+                }
             }
             .navigationTitle("Past Scans")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        
-                    } label: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: DummyAddView()) {
                         Image(systemName: "gearshape")
                             .bold()
                     }
-                
+                }
             }
-//                Image(systemName: "gearshape")
-//                Button("Help") {
-//                    print("Help tapped!")
-//                }
-            }
-            
         }
     }
+
 }
 
 struct ListRow: View {
