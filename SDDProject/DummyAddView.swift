@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DummyAddView: View {
     
+    @State var item = SavedItems(barcodeID: 0, name: "", status: false, image: "")
     @Environment(\.modelContext) private var context
     
     var body: some View {
@@ -22,8 +23,11 @@ struct DummyAddView: View {
     
     func addItem() {
         //Create item
-        
-        let item = SavedItems(barcodeID: 4, name: "TEST", status: true, image: "nate")
+        item.barcodeID = 4
+        item.name = "TEST"
+        item.status = true
+        item.image = "nate"
+
         //Add item to data context
         context.insert(item)
     }

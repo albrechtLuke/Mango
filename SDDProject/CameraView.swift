@@ -16,6 +16,8 @@ struct CameraView: View {
     
     var body: some View {
         NavigationStack {
+            
+            //Checks the status of gaining access to camera, and displays the appropriate screen
             switch vm.dataScannerAccessStatus {
             case .notDetermined:
                 PermissionView(permissionImage: "video", permissionText: "Requesting Camera Access")
@@ -29,24 +31,13 @@ struct CameraView: View {
             case .scannerAvailable:
                 mainView
             case .scannerNotAvailable:
-//                Text("Your device does not have a camera")
-//                    .fullScreenCover(isPresented: .constant(true), content: {
                     PermissionView(permissionImage: "questionmark.video", permissionText: "Your device does not have a camera")
-//                    })
             }
         }
     }
     
-    private var headerView: some View {
-        VStack {
-            Text(vm.headerText)
-                .padding(.top)
-                .font(.title2)
-                .fontWeight(.bold)
-        }
-        .padding(.horizontal)
-    }
-    
+
+    //Displays camera feed
     private var mainView: some View {
         TabView {
             ZStack {
@@ -77,12 +68,21 @@ struct CameraView: View {
         }
     }
     
-    
+    //Displays bottom sheet
     private var bottomContainerView: some View {
         VStack {
-            headerView
+            Text(vm.headerText)
+                .padding(.top)
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding(.horizontal)
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 16) {
+                    Button("Test Item") {
+                        foundBarcode = "5449000131805"
+                        isShowingItemFoundView = true
+                    }
+                    
                     ForEach(vm.recognizedItems.indices, id: \.self) { index in
                         let item = vm.recognizedItems[index]
                         switch item {
@@ -91,19 +91,17 @@ struct CameraView: View {
                             Text("Item Found!")
                                 .onAppear(perform: {
                                     while foundBarcode == nil {
-                                        if isEAN13(tempBarcode) {
                                             foundBarcode = tempBarcode
                                             isShowingItemFoundView = true
-                                        }
                                     }
                                     
                                 })
                             
                             
-                            //                             Capture the barcode only when isShowingItemFoundView is true
-                            //                            if isShowingItemFoundView {
-                            //                                foundBarcode = tempBarcode
-                            //                            }
+//                             Capture the barcode only when isShowingItemFoundView is true
+//                            if isShowingItemFoundView {
+//                                foundBarcode = tempBarcode
+//                            }
                             
                         case .text(let text):
                             Text(text.transcript)
@@ -111,6 +109,7 @@ struct CameraView: View {
                             Text("Unknown")
                         }
                     }
+                    
                 }
                 .padding()
                 .fullScreenCover(isPresented: $isShowingItemFoundView) {
@@ -123,6 +122,7 @@ struct CameraView: View {
 }
 
 
+//Reusable struct for displaying permission status
 struct PermissionView: View {
     
     let permissionImage: String
@@ -140,6 +140,8 @@ struct PermissionView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding()
+            
+            
         }
     }
 }

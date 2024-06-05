@@ -23,3 +23,52 @@ class SavedItems: Identifiable {
         self.image = image
     }
 }
+
+
+
+
+//Possible user preferences
+struct PreferencesList {
+    static let dictionary: [String: [String]] = [
+        "Lactose": [
+            "Milk",
+            "Cream",
+            "Cheese",
+            "Butter",
+            "Whey",
+            "Whey protein concentrate",
+            "Whey protein isolate",
+            "Casein",
+            "Caseinates",
+            "Lactose",
+            "Lactose monohydrate",
+            "Milk solids",
+            "Milk powder",
+            "Condensed milk",
+            "Evaporated milk",
+            "Sour cream",
+            "Yogurt",
+            "Buttermilk",
+            "Curds",
+            "Custard",
+            "Ghee",
+            "Half-and-half",
+            "Ice cream",
+            "Milkfat",
+            "Nonfat dry milk",
+            "Pudding",
+            "Ricotta",
+            "Skim milk",
+            "Milk protein concentrate",
+            "Lactalbumin",
+            "Lactoglobulin",
+            "Lactitol",
+            "Malted milk",
+            "Curds",
+            "Nougat",
+            "Artificial butter flavor",
+            "Caramel color"
+        ],
+        
+    ]
+}

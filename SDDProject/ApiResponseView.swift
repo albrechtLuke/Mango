@@ -12,32 +12,36 @@ import SwiftfulLoadingIndicators
 
 struct ApiResponseView: View {
     @State private var productName: String = ""
+    @State private var productImage: String = ""
     @State private var ingredientsTags: [String] = []
     @Binding var isPresented: Bool
     @Binding var foundBarcode: String?
     let barcodeID: String
     
+    //TEMPORARY: Adds each item from ingredients api call to listItems --> change this into comparaison logic
+    var listItems: [ListItem] {
+        ingredientsTags.map { tag in
+            ListItem(name: tag, ConsumableColor: nil, indent: false)
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
                 //changes what to display, change later to a more useful variable
-//                if barcodeID != "no response yet :(" {
+
                     if ingredientsTags.isEmpty {
-//                        Text("Loading ingredientsTags: \(barcodeID)...")
-//                            .padding()
+                        Text("Loading ingredientsTags: \(barcodeID)...")
+                            .padding()
                         LoadingIndicator(size: .large)
                     } else {
-                        List(ingredientsTags, id: \.self) { tag in
-                            Text(tag)
+                        DummyResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, isPresented: $isPresented, foundBarcode: $foundBarcode)
+                        List(listItems) { item in
+                            Text(item.name)
                         }
                     }
-//                } else {
-//                    Text("Loading foundBarcode: \(barcodeID)...")
-//                        .padding()
-//                    LoadingIndicator(size: .large)
-//                }
             }
-            .navigationTitle(productName)
+    
             .navigationBarItems(trailing: Button(action: {
                                 foundBarcode = nil
                                 isPresented = false
@@ -87,9 +91,11 @@ struct ApiResponseView: View {
             // Parse the JSON data
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                let product = json["product"] as? [String: Any],
+               let productImageValue = product["image_front_url"] as? String,
                let productNameValue = product["product_name"] as? String,
                let ingredientsTagsArray = product["ingredients_tags"] as? [String] {
                 // Access the value of the "product_name" key
+                productImage = productImageValue
                 productName = productNameValue
                 
                 //remove "en:" prefix

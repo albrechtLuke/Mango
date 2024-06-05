@@ -11,12 +11,14 @@ import SwiftData
 
 struct DummyListView: View {
     
+    //Call SwiftData Container
     @Environment(\.modelContext) private var context
     @Query private var items: [SavedItems]
     
     var body: some View {
         NavigationView {
             List {
+                //displays each item from SwiftData container in a list view
                 ForEach(items) { item in
                     ListRow(imageName: item.image, heading: item.name, subtitle: "Subtitle")
                 }
@@ -35,6 +37,7 @@ struct DummyListView: View {
 
 }
 
+//Struct for the individual row items.
 struct ListRow: View {
     let imageName: String
     let heading: String
@@ -61,8 +64,4 @@ struct ListRow: View {
         }
         
     }
-}
-
-#Preview {
-    DummyListView()
 }
