@@ -21,24 +21,22 @@ enum DataScannerAccessStatusType {
 enum ScanType: String {
     case text, barcode
 }
-//The following code is all about getting access to the camera in order to obtain a video feed
 
 @MainActor
 final class AppViewModel: ObservableObject {
     
-    //onboarding
+    // Onboarding
     @AppStorage("isOnboarding") var isOnboarding: Bool = true {
-            didSet {
-                objectWillChange.send()
-            }
+        didSet {
+            objectWillChange.send()
         }
-        
-        func finishOnboarding() {
-            isOnboarding = false
-        }
+    }
     
+    func finishOnboarding() {
+        isOnboarding = false
+    }
     
-    //preferences for user//
+    // Preferences for user
     @Published var inedIng: [String: [String]] = [
         "Lactose Free": [
                 "Milk", "Cream", "Cheese", "Butter", "Whey", "Whey protein concentrate",
@@ -131,17 +129,20 @@ final class AppViewModel: ObservableObject {
             ]
         
     ]
-    @Published var inedIngPreferences: [String] = []
+    
+    @Published var inedIngPreferences: [String: [String]] = [:]
     
     init() {
         loadInedIng()
     }
     
-    func toggleInedIng(_ preference: String) {
-        if inedIngPreferences.contains(preference) {
-            inedIngPreferences.removeAll { $0 == preference }
-        } else {
-            inedIngPreferences.append(preference)
+    func toggleCategory(_ category: String) {
+        if let items = inedIng[category] {
+            if inedIngPreferences.keys.contains(category) {
+                inedIngPreferences.removeValue(forKey: category)
+            } else {
+                inedIngPreferences[category] = items
+            }
         }
         saveInedIng()
     }
@@ -151,14 +152,12 @@ final class AppViewModel: ObservableObject {
     }
     
     private func loadInedIng() {
-        if let savedPreferences = UserDefaults.standard.array(forKey: "selectedPreferences") as? [String] {
+        if let savedPreferences = UserDefaults.standard.dictionary(forKey: "selectedPreferences") as? [String: [String]] {
             inedIngPreferences = savedPreferences
         }
     }
     
-    
-    //data scanner setup//
-    
+    // Data scanner setup
     @Published var dataScannerAccessStatus: DataScannerAccessStatusType = .notDetermined
     @Published var recognizedItems: [RecognizedItem] = []
     @Published var scanType: ScanType = .barcode
@@ -188,10 +187,7 @@ final class AppViewModel: ObservableObject {
         return hasher.finalize()
     }
     
-    
-    
-    //All cases for camera permissions
-    
+    // All cases for camera permissions
     private var isScannerAvailable: Bool {
         DataScannerViewController.isAvailable && DataScannerViewController.isSupported
     }
@@ -203,12 +199,10 @@ final class AppViewModel: ObservableObject {
         }
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-            case .authorized:
-                dataScannerAccessStatus = isScannerAvailable ? .scannerAvailable: .scannerNotAvailable
-            
-            case .restricted, .denied:
-                dataScannerAccessStatus = .cameraAccessNotGranted
-            
+        case .authorized:
+            dataScannerAccessStatus = isScannerAvailable ? .scannerAvailable : .scannerNotAvailable
+        case .restricted, .denied:
+            dataScannerAccessStatus = .cameraAccessNotGranted
         case .notDetermined:
             let granted = await AVCaptureDevice.requestAccess(for: .video)
             if granted {
@@ -216,10 +210,7 @@ final class AppViewModel: ObservableObject {
             } else {
                 dataScannerAccessStatus = .cameraAccessNotGranted
             }
-            
         default: break
-            
-        
         }
     }
 }

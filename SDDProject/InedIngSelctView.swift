@@ -16,18 +16,16 @@ struct InedIngSelectView: View {
                 ForEach(vm.inedIng.keys.sorted(), id: \.self) { category in
                     HStack {
                         Button(action: {
-                            vm.toggleInedIng(category)
+                            vm.toggleCategory(category)
                         }) {
                             HStack {
                                 Text(category)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .frame(height: 4)
                                     .padding()
-                                    .background(vm.inedIngPreferences.contains(category) ? Color.accentColor : Color.clear)
+                                    .background(vm.inedIngPreferences.keys.contains(category) ? Color.accentColor : Color.clear)
                                     .cornerRadius(10)
-                                    .fontWeight(.semibold)
-                                    .foregroundStyle(vm.inedIngPreferences.contains(category) ? .white : .primary)
+                                    .foregroundColor(vm.inedIngPreferences.keys.contains(category) ? .white : .primary)
                             }
                             .contentShape(Rectangle())
                         }

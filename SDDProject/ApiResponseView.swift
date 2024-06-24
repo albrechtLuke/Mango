@@ -24,11 +24,11 @@ struct ApiResponseView: View {
     @Environment(\.modelContext) private var context
     
     var listItems: [ListItem] {
-        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIng).map { $0.0 }
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIngPreferences).map { $0.0 }
     }
 
     var matchingPreferences: [String?] {
-        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIng).map { $0.1 }
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIngPreferences).map { $0.1 }
     }
 
     
@@ -38,7 +38,7 @@ struct ApiResponseView: View {
             ZStack {
                 VStack {
                     if ingredientsTags.isEmpty {
-                        Text("Barcode: "+foundBarcode)
+                        
                         LoadingIndicator(size: .large)
                     } else {
                         ResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, preferenceMatch: matchingPreferences, isPresented: $isPresented)
