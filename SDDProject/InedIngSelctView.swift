@@ -22,6 +22,7 @@ struct InedIngSelectView: View {
                                 Text(category)
                                     .fontWeight(.semibold)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(height: 4)
                                     .padding()
                                     .background(vm.inedIngPreferences.keys.contains(category) ? Color.accentColor : Color.clear)
                                     .cornerRadius(10)
