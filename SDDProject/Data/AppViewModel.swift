@@ -26,6 +26,61 @@ enum ScanType: String {
 @MainActor
 final class AppViewModel: ObservableObject {
     
+    //onboarding
+    @AppStorage("isOnboarding") var isOnboarding: Bool = true {
+            didSet {
+                objectWillChange.send()
+            }
+        }
+        
+        func finishOnboarding() {
+            isOnboarding = false
+        }
+    
+    
+    //preferences for user//
+    @Published var preferences: [String: [String]] = [
+        "Lactose Free": [
+            "Milk", "Cream", "Cheese", "Butter", "Whey", "Whey protein concentrate",
+            "Whey protein isolate", "Casein", "Caseinates", "Lactose", "Lactose monohydrate",
+            "Milk solids", "Milk powder", "Condensed milk", "Evaporated milk", "Sour cream",
+            "Yogurt", "Buttermilk", "Curds", "Custard", "Ghee", "Half-and-half",
+            "Ice cream", "Milkfat", "Nonfat dry milk", "Pudding", "Ricotta", "Skim milk",
+            "Milk protein concentrate", "Lactalbumin", "Lactoglobulin", "Lactitol", "Malted milk",
+            "Curds", "Nougat", "Artificial butter flavor", "Caramel color", "Dairy"
+        ],
+        "Gluten": [
+            "Bread"
+        ]
+    ]
+    @Published var selectedPreferences: [String] = []
+    
+    init() {
+        loadPreferences()
+    }
+    
+    func togglePreference(_ preference: String) {
+        if selectedPreferences.contains(preference) {
+            selectedPreferences.removeAll { $0 == preference }
+        } else {
+            selectedPreferences.append(preference)
+        }
+        savePreferences()
+    }
+    
+    private func savePreferences() {
+        UserDefaults.standard.set(selectedPreferences, forKey: "selectedPreferences")
+    }
+    
+    private func loadPreferences() {
+        if let savedPreferences = UserDefaults.standard.array(forKey: "selectedPreferences") as? [String] {
+            selectedPreferences = savedPreferences
+        }
+    }
+    
+    
+    //data scanner setup//
+    
     @Published var dataScannerAccessStatus: DataScannerAccessStatusType = .notDetermined
     @Published var recognizedItems: [RecognizedItem] = []
     @Published var scanType: ScanType = .barcode
@@ -88,7 +143,5 @@ final class AppViewModel: ObservableObject {
             
         
         }
-        
     }
-    
 }

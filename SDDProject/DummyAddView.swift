@@ -16,24 +16,22 @@ struct DummyAddView: View {
         VStack {
             Text("Tap to add item")
             Button("Add item") {
-                addItem()
+                addItem(barcodeID: 4,name:"Test",status:false,image:"nate")
             }
         }
     }
     
-    func addItem() {
+    func addItem(barcodeID: Int, name: String, status: Bool, image: String) {
         //Create item
-        item.barcodeID = 4
-        item.name = "TEST"
-        item.status = true
-        item.image = "nate"
+        item.barcodeID = barcodeID
+        item.name = name
+        item.status = status
+        item.image = image
 
         //Add item to data context
         context.insert(item)
     }
-    
-}
 
-#Preview {
-    DummyAddView()
+    
+        
 }

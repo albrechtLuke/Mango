@@ -12,12 +12,8 @@ import VisionKit
 struct DataScannerView: UIViewControllerRepresentable {
     
     @Binding var recognizedItems: [RecognizedItem]
-
-//    let recognizedDataType: DataScannerViewController.RecognizedDataType
+    
     let recognizeMultipleItems: Bool
-    
-    
-    
     
     func makeUIViewController(context: Context) -> DataScannerViewController {
         let vc = DataScannerViewController(
@@ -27,16 +23,13 @@ struct DataScannerView: UIViewControllerRepresentable {
             isPinchToZoomEnabled: true,
             isGuidanceEnabled: true,
             isHighlightingEnabled: true
-            
-            
         )
         return vc
     }
     
     func updateUIViewController(_ uiViewController: DataScannerViewController, context: Context) {
-        uiViewController.delegate = context.coordinator
-        try? uiViewController.startScanning()
-        
+            uiViewController.delegate = context.coordinator
+            try? uiViewController.startScanning()
     }
     
     func makeCoordinator() -> Coordinator {
@@ -46,6 +39,7 @@ struct DataScannerView: UIViewControllerRepresentable {
     static func dismantleUIViewController(_ uiViewController: DataScannerViewController, coordinator: Coordinator) {
         uiViewController.stopScanning()
     }
+    
     
     class Coordinator: NSObject, DataScannerViewControllerDelegate {
         

@@ -6,9 +6,8 @@
 //
 
 import SwiftUI
+import SwiftData
 import SwiftfulLoadingIndicators
-
-
 
 struct ApiResponseView: View {
     @State private var productName: String = ""
@@ -17,77 +16,103 @@ struct ApiResponseView: View {
     @Binding var isPresented: Bool
     @Binding var foundBarcode: String?
     let barcodeID: String
+    let showErrorToast: (String) -> Void
     
-    //TEMPORARY: Adds each item from ingredients api call to listItems --> change this into comparaison logic
+    @ObservedObject var viewModel = AppViewModel()
+    
+    //Call SwiftData Container
+    @Environment(\.modelContext) private var context
+    
     var listItems: [ListItem] {
-        ingredientsTags.map { tag in
-            ListItem(name: tag, ConsumableColor: nil, indent: false)
-        }
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.preferences).map { $0.0 }
+    }
+    
+    var matchingPreferences: [String?] {
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.preferences).map { $0.1 }
     }
     
     var body: some View {
         NavigationStack {
-            VStack {
-                //changes what to display, change later to a more useful variable
-
+            ZStack {
+                VStack {
                     if ingredientsTags.isEmpty {
-                        Text("Loading ingredientsTags: \(barcodeID)...")
-                            .padding()
+//                        Text("ApiResponseView()")
+//                        Text("Loading ingredientsTags: \(barcodeID)...")
+//                            .padding()
                         LoadingIndicator(size: .large)
                     } else {
-                        DummyResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, isPresented: $isPresented, foundBarcode: $foundBarcode)
-                        List(listItems) { item in
-                            Text(item.name)
-                        }
+                        ResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, preferenceMatch: matchingPreferences, isPresented: $isPresented, foundBarcode: $foundBarcode)
                     }
+                }
+                VStack {
+                    Spacer()
+                }
             }
-    
-            .navigationBarItems(trailing: Button(action: {
-                                foundBarcode = nil
-                                isPresented = false
-                                
-                            }) {
-                                Image(systemName: "x.circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .padding()
-                            })
         }
         .onAppear {
             Task {
                 await fetchData()
             }
         }
+        .onChange(of: ingredientsTags, { oldValue, newValue in
+            guard !newValue.isEmpty else { return }
+            let intBarcode = Int(barcodeID) ?? 0
+            let allPreferencesMatched = matchingPreferences.allSatisfy { $0 == nil }
+            let item = SavedItems(barcodeID: intBarcode, name: productName, status: allPreferencesMatched, image: productImage)
+            context.insert(item)
+            print("Item Saved")
+        })
+        
     }
-    
+
     func fetchData() async {
         // Define the URL
-
         let urlString = "https://world.openfoodfacts.org/api/v0/product/\(barcodeID).json"
-
+        
         // Define the URL object
         guard let url = URL(string: urlString) else {
-            print("Invalid URL")
+            exitWithError(message: "Invalid URL")
             return
         }
-
+        
         // Define the request object
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         do {
             // Perform the request
             let (data, response) = try await URLSession.shared.data(for: request)
-
+            
             // Check for response status
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                print("Invalid response")
+            guard let httpResponse = response as? HTTPURLResponse else {
+                exitWithError(message: "Invalid response")
                 return
             }
-
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                break // Successful response, continue processing
+            case 400:
+                exitWithError(message: "Bad Request (400)")
+                return
+            case 401:
+                exitWithError(message: "Unauthorized (401)")
+                return
+            case 403:
+                exitWithError(message: "Forbidden (403)")
+                return
+            case 404:
+                exitWithError(message: "Not Found (404)")
+                return
+            case 500:
+                exitWithError(message: "Internal Server Error (500)")
+                return
+            default:
+                exitWithError(message: "Unexpected HTTP status code: \(httpResponse.statusCode)")
+                return
+            }
+            
             // Parse the JSON data
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                let product = json["product"] as? [String: Any],
@@ -98,14 +123,28 @@ struct ApiResponseView: View {
                 productImage = productImageValue
                 productName = productNameValue
                 
-                //remove "en:" prefix
+                // Remove "en:" prefix
                 ingredientsTags = ingredientsTagsArray.map { $0.replacingOccurrences(of: "en:", with: "") }
+                ingredientsTags = ingredientsTags.map { $0.replacingOccurrences(of: "-", with: " ") }
+                
+                print("productImage:  \(productImage)")
+                print("productName:  \(productName)")
             } else {
-                print("Failed to parse JSON or extract product name and ingredients tags")
+                exitWithError(message: "Failed to parse JSON")
             }
         } catch {
-            print("Error: \(error)")
+            if (error as NSError).code == NSURLErrorNotConnectedToInternet {
+                exitWithError(message: "No internet connection")
+            } else {
+                exitWithError(message: "Error: \(error.localizedDescription)")
+            }
         }
     }
-}
 
+    func exitWithError(message: String) {
+        print(message)
+        showErrorToast(message) // Call the closure to show toast in CameraView
+        foundBarcode = nil
+        isPresented = false
+    }
+}
