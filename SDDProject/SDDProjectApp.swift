@@ -21,7 +21,7 @@ struct SDDProjectApp: App {
                     .environmentObject(vm)
             } else {
                 TabView {
-                    CameraView()
+                    CameraView(foundBarcode: "0")
                         .modelContainer(for: SavedItems.self)
                         .environmentObject(vm)
                         .task {
@@ -38,7 +38,7 @@ struct SDDProjectApp: App {
                         .environmentObject(vm)
                         .tag(2)
                         .tabItem {
-                            Label("List", systemImage: "list.clipboard")
+                            Label("History", systemImage: "list.clipboard")
                         }
                 }
             }

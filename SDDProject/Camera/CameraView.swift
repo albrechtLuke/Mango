@@ -11,15 +11,15 @@ import AlertToast
 
 struct CameraView: View {
     @EnvironmentObject var vm: AppViewModel
-    @State private var isShowingItemFoundView = false
-    @State private var foundBarcode: String?
-    @State private var showToast = false
-    @State private var toastMessage = ""
-    @State private var barcodeID: String = ""
-    
+        @State var isShowingItemFoundView = false
+        @State var foundBarcode: String
+        @State var showToast = false
+        @State var toastMessage = ""
     
     var body: some View {
         NavigationStack {
+            
+            //Checks the status of gaining access to camera, and displays the appropriate screen
             switch vm.dataScannerAccessStatus {
             case .notDetermined:
                 PermissionView(permissionImage: "video", permissionText: "Requesting Camera Access")
@@ -31,45 +31,50 @@ struct CameraView: View {
                         PermissionView(permissionImage: "video.slash", permissionText: "Your device does not have support for scanning barcode with this app!")
                     })
             case .scannerAvailable:
+                
                 mainView
+                    .toast(isPresenting: $showToast) {
+                        AlertToast(displayMode: .hud, type: .error(.red), title: toastMessage)
+                    }
+                
             case .scannerNotAvailable:
                 PermissionView(permissionImage: "questionmark.video", permissionText: "Your device does not have a camera")
                 Button {
-                    updateStateAndShowLoadingView(barcode: "9300633556174")
+                    updateStateAndShowLoadingView()
                 } label: {
-                    Text("Milk")
-                }
-                .buttonStyle(.bordered)
-                Button {
-                    updateStateAndShowLoadingView(barcode: "9342866000796")
-                } label: {
-                    Text("Monster")
+                    Text("TestButton")
                 }
                 .buttonStyle(.bordered)
                 .fullScreenCover(isPresented: $isShowingItemFoundView) {
-                    ApiResponseView(isPresented: $isShowingItemFoundView, foundBarcode: $foundBarcode, barcodeID: barcodeID, showErrorToast: { message in
+                    ApiResponseView(isPresented: $isShowingItemFoundView, foundBarcode: foundBarcode, showErrorToast: { message in
                         showToast(message)
                     })
-                }
+                }                
                 .toast(isPresenting: $showToast) {
                     AlertToast(displayMode: .hud, type: .error(.red), title: toastMessage)
                 }
             }
         }
-        
+        .onChange(of: isShowingItemFoundView) { _, newValue in
+            if newValue {
+                print("isShowingItemFoundView is now true")
+//                print("barcodeID: \(barcodeID)")ti
+                print("foundBarcode: \(foundBarcode)")
+            }
+        }
     }
     
-    private func updateStateAndShowLoadingView(barcode: String) {
-        barcodeID = barcode
-        foundBarcode = barcode
+    private func updateStateAndShowLoadingView() {
+        foundBarcode = "9300633556174"
         isShowingItemFoundView = true
-        print("Button pressed. barcodeID and foundBarcode updated.")
+        print("Button pressed. foundBarcode updated.")
     }
     
+    // Displays camera feed
     private var mainView: some View {
         TabView {
             ZStack {
-                // Pass isCameraViewActive as binding to DataScannerView
+                bottomContainerView
                 DataScannerView(
                     recognizedItems: $vm.recognizedItems,
                     recognizeMultipleItems: vm.recognizesMultipleItems)
@@ -77,31 +82,48 @@ struct CameraView: View {
                 .ignoresSafeArea()
                 .id(vm.dataScannerViewId)
                 
-                
+                                
             }
-            .onAppear {
-                processRecognizedItems()
-            }
+        }
+        .fullScreenCover(isPresented: $isShowingItemFoundView) {
+            ApiResponseView(isPresented: $isShowingItemFoundView, foundBarcode: foundBarcode, dontSave: true, showErrorToast: { message in
+                showToast(message)
+            })
         }
     }
     
-    // Function to process recognized items and update foundBarcode
-    private func processRecognizedItems() {
-        for item in vm.recognizedItems {
-            if case let .barcode(barcode) = item {
-                let tempBarcode = barcode.payloadStringValue ?? "Unknown Barcode"
-                if foundBarcode == nil {
-                    foundBarcode = tempBarcode
-                    isShowingItemFoundView = true
+    // Displays bottom sheet
+    private var bottomContainerView: some View {
+        
+        LazyVStack(alignment: .leading, spacing: 16) {
+            ForEach(vm.recognizedItems.indices, id: \.self) { index in
+                let item = vm.recognizedItems[index]
+                switch item {
+                case .barcode(let barcode):
+                    Text("Item Found!")
+                        .onAppear {
+                            if let tempBarcode = barcode.payloadStringValue {
+                                foundBarcode = tempBarcode
+                                print(foundBarcode)
+                                isShowingItemFoundView = true
+                            }
+                        }
+                    
+                case .text(let text):
+                    Text(text.transcript)
+                @unknown default:
+                    Text("Unknown")
                 }
             }
         }
+        
+    
+    
     }
-
     func showToast(_ message: String) {
-        toastMessage = message
-        showToast = true
-    }
+            toastMessage = message
+            showToast = true
+        }
 }
 
 //Reusable struct for displaying permission status

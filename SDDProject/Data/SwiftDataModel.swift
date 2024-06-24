@@ -11,13 +11,13 @@ import SwiftData
 @Model
 class SavedItems: Identifiable {
     
-    var barcodeID: Int
+    var foundBarcode: Int
     var name: String
     var status: Bool
     var image: String
     
-    init(barcodeID: Int, name: String, status: Bool, image: String) {
-        self.barcodeID = barcodeID
+    init(foundBarcode: Int, name: String, status: Bool, image: String) {
+        self.foundBarcode = foundBarcode
         self.name = name
         self.status = status
         self.image = image

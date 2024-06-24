@@ -24,7 +24,6 @@ struct ListView: View {
             List {
                 //displays each item from SwiftData container in a list view
                 ForEach(items) { item in
-//                    NavigationLink("hello", destination: ApiResponseView(isPresented: <#T##Binding<Bool>#>, barcodeID: <#T##String#>, showErrorToast: <#T##(String) -> Void#>))
                     
                     ListRow(imageName: item.image, heading: item.name, status: item.status)
                 }
@@ -93,7 +92,7 @@ struct ListRow: View {
                 
             VStack(alignment: .leading) {
                 Text(heading.capitalized)
-                Text(status ? "good" : "bad")
+                Text(status ? "Edible" : "Inedible")
                     .font(.subheadline)
                     .foregroundColor(status ? .green : .red)
             }

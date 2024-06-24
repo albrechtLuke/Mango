@@ -4,7 +4,7 @@
 //
 //  Created by Luke Albrecht on 18/5/2024.
 //
-// i firgot o]how this works
+//
 import SwiftUI
 
 struct ResultsView: View {
@@ -14,7 +14,7 @@ struct ResultsView: View {
     @State var itemImage: String
     @State var preferenceMatch: [String?]
     @Binding var isPresented: Bool
-    @Binding var foundBarcode: String?
+//    @Binding var foundBarcode: String?
     
     var allPreferencesMatched: Bool {
         preferenceMatch.allSatisfy { $0 == nil }
@@ -59,8 +59,8 @@ struct ResultsView: View {
                     
                     //                 Presents Sheet
                         .sheet(isPresented: $isPresented, content: {
-                            ResultSheetView(listItems: listItems, itemTitle: itemTitle, preferenceMatch: preferenceMatch, isPresented: $isPresented, foundBarcode: $foundBarcode)
-                                .presentationDetents([.large, .fraction(0.5)]/*, largestUndimmed: .medium*/)
+                            ResultSheetView(listItems: listItems, itemTitle: itemTitle, preferenceMatch: preferenceMatch, isPresented: $isPresented)
+                                .presentationDetents([.large, .fraction(0.5)]/*, largestUndimmed: .constant(4)*/)
                                 .presentationCornerRadius(30)
                                 .presentationDragIndicator(.visible)
                                 .interactiveDismissDisabled()
@@ -117,7 +117,7 @@ struct ResultSheetView: View {
     @State var itemTitle: String
     @State var preferenceMatch: [String?]
     @Binding var isPresented: Bool
-    @Binding var foundBarcode: String?
+//    @State var foundBarcode: String
     
     var fullTitle: String {
         let uniquePreferences = Array(Set(preferenceMatch.compactMap { $0 }))
@@ -138,7 +138,7 @@ struct ResultSheetView: View {
                     
                 VStack {
                     Button(action: {
-                        foundBarcode = nil
+//                        foundBarcode = nil
                         isPresented = false
                     }) {
                         Image(systemName: "x.circle")

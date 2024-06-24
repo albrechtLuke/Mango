@@ -14,8 +14,8 @@ struct ApiResponseView: View {
     @State private var productImage: String = ""
     @State private var ingredientsTags: [String] = []
     @Binding var isPresented: Bool
-    @Binding var foundBarcode: String?
-    let barcodeID: String
+    @State var foundBarcode: String
+    @State var dontSave: Bool? = false
     let showErrorToast: (String) -> Void
     
     @ObservedObject var viewModel = AppViewModel()
@@ -24,24 +24,24 @@ struct ApiResponseView: View {
     @Environment(\.modelContext) private var context
     
     var listItems: [ListItem] {
-        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.preferences).map { $0.0 }
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIng).map { $0.0 }
     }
-    
+
     var matchingPreferences: [String?] {
-        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.preferences).map { $0.1 }
+        IngredientComparator.compareIngredients(apiIngredients: ingredientsTags, userPreferences: viewModel.inedIng).map { $0.1 }
     }
+
     
     var body: some View {
         NavigationStack {
+            
             ZStack {
                 VStack {
                     if ingredientsTags.isEmpty {
-//                        Text("ApiResponseView()")
-//                        Text("Loading ingredientsTags: \(barcodeID)...")
-//                            .padding()
+                        Text("Barcode: "+foundBarcode)
                         LoadingIndicator(size: .large)
                     } else {
-                        ResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, preferenceMatch: matchingPreferences, isPresented: $isPresented, foundBarcode: $foundBarcode)
+                        ResultsView(listItems: listItems, itemTitle: productName, itemImage: productImage, preferenceMatch: matchingPreferences, isPresented: $isPresented)
                     }
                 }
                 VStack {
@@ -55,19 +55,24 @@ struct ApiResponseView: View {
             }
         }
         .onChange(of: ingredientsTags, { oldValue, newValue in
-            guard !newValue.isEmpty else { return }
-            let intBarcode = Int(barcodeID) ?? 0
-            let allPreferencesMatched = matchingPreferences.allSatisfy { $0 == nil }
-            let item = SavedItems(barcodeID: intBarcode, name: productName, status: allPreferencesMatched, image: productImage)
-            context.insert(item)
-            print("Item Saved")
+            if dontSave != true {
+                guard !newValue.isEmpty else { return }
+                let intBarcode = Int(foundBarcode) ?? 0
+                let allPreferencesMatched = matchingPreferences.allSatisfy { $0 == nil }
+                let item = SavedItems(foundBarcode: intBarcode, name: productName, status: allPreferencesMatched, image: productImage)
+                context.insert(item)
+                print("Item Saved")
+            }
+            else {
+                print("Didn't Save")
+            }
         })
         
     }
 
     func fetchData() async {
         // Define the URL
-        let urlString = "https://world.openfoodfacts.org/api/v0/product/\(barcodeID).json"
+        let urlString = "https://world.openfoodfacts.org/api/v0/product/\(foundBarcode).json"
         
         // Define the URL object
         guard let url = URL(string: urlString) else {
@@ -144,7 +149,7 @@ struct ApiResponseView: View {
     func exitWithError(message: String) {
         print(message)
         showErrorToast(message) // Call the closure to show toast in CameraView
-        foundBarcode = nil
+//        foundBarcode = nil
         isPresented = false
     }
 }

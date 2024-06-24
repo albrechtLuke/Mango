@@ -13,10 +13,10 @@ struct InedIngSelectView: View {
     var body: some View {
         ZStack {
             List {
-                ForEach(vm.preferences.keys.sorted(), id: \.self) { category in
+                ForEach(vm.inedIng.keys.sorted(), id: \.self) { category in
                     HStack {
                         Button(action: {
-                            vm.togglePreference(category)
+                            vm.toggleInedIng(category)
                         }) {
                             HStack {
                                 Text(category)
@@ -24,10 +24,10 @@ struct InedIngSelectView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .frame(height: 4)
                                     .padding()
-                                    .background(vm.selectedPreferences.contains(category) ? Color.accentColor : Color.clear)
+                                    .background(vm.inedIngPreferences.contains(category) ? Color.accentColor : Color.clear)
                                     .cornerRadius(10)
                                     .fontWeight(.semibold)
-                                    .foregroundStyle(vm.selectedPreferences.contains(category) ? .white : .primary)
+                                    .foregroundStyle(vm.inedIngPreferences.contains(category) ? .white : .primary)
                             }
                             .contentShape(Rectangle())
                         }
@@ -67,5 +67,3 @@ struct InedIngSelectView: View {
 #Preview {
     InedIngSelectView()
 }
-
-

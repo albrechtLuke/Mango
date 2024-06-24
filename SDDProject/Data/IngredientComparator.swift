@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-
-
 class IngredientComparator {
     
     static func compareIngredients(apiIngredients: [String], userPreferences: [String: [String]]) -> [(ListItem, String?)] {
