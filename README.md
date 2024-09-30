@@ -4,6 +4,13 @@
 
 This mobile application is designed to help users with dietary restrictions and preferences quickly determine the suitability of food items. By using image recognition technology to analyse product labels, the app provides near-instant feedback on whether an item is consumable based on the user's dietary needs.
 
+<p align="left">
+  <img src="images/image4.png" alt="Image 1" width="150"/>
+  <img src="images/image2.png" alt="Image 2" width="150"/>
+  <img src="images/image1.png" alt="Image 3" width="150"/>
+  <img src="images/image3.png" alt="Image 4" width="150"/>
+</p>
+
 ## Features
 
 - **Optical Character Recognition (OCR)**: Scans product labels to extract text.
